@@ -1,0 +1,52 @@
+openapi: 3.0.1
+info:
+  title: Storage
+  description: |
+    API for Storage
+  version: "1.0"
+paths:
+  /items:
+    put:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/details"
+        required: true
+      x-amazon-apigateway-request-validator: Validate body
+      x-amazon-apigateway-integration:
+        httpMethod: POST
+        type: AWS_PROXY
+        uri: ${invoke_arn}
+        passthroughBehavior: when_no_match
+        contentHandling: CONVERT_TO_TEXT
+      responses:
+        201:
+          description: Item added successfully
+        400:
+          description: Incorrect item details
+        409:
+          description: Provided Username currently exist
+components:
+  schemas:
+    details:
+      title: Item Details
+      required:
+        - name
+        - quantity
+        - form
+      type: object
+      properties:
+        name:
+          type: string
+          example: Paper Towel
+        quantity:
+          type: number
+          example: 5
+        form:
+          type: string
+          example: boxes
+x-amazon-apigateway-request-validators:
+  Validate body:
+    validateRequestParameters: false
+    validateRequestBody: true
