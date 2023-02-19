@@ -12,3 +12,7 @@ variable "lambda_functions" {
     iam_role_name : string
   }))
 }
+
+variable "s3_storage_manager_arn" {
+  type = string
+}
